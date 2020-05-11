@@ -20,7 +20,13 @@ def index():
 
 @app.route("/get_my_ip", methods=["GET"])
 def get_my_ip():
-    return json.dumps({'ip': request.remote_addr}), 200
+    try:
+        real_ip = request.headers['X-Forwarded-For']
+        redirect_ip = request.remote_addr
+
+        return json.dumps({'real_ip': real_ip, 'redirect_ip': request.remote_addr}), 200
+    except:
+        return json.dumps({'redirect_ip': request.remote_addr}), 200
 
 
 @app.route('/verifyOTP', methods=['POST'])
