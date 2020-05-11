@@ -1,13 +1,13 @@
 from flask import Flask, request
-from flask_pymongo import PyMongo
+# from flask_pymongo import PyMongo
 
 import http.client
 import json
 import helper
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://unlikely:<coolperson>@cluster0-5cxq4.mongodb.net/test?retryWrites=true&w=majority"
-mongo = PyMongo(app)
+# app.config["MONGO_URI"] = "mongodb+srv://unlikely:<coolperson>@cluster0-5cxq4.mongodb.net/test?retryWrites=true&w=majority"
+# mongo = PyMongo(app)
 # database = mongo.
 
 
