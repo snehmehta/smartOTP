@@ -1,28 +1,33 @@
-from flask import Flask, request
-# from flask_pymongo import PyMongo
+from flask import Flask, request, render_template
+from pymongo import MongoClient
 
+import requests
 import http.client
 import json
 import helper
 
 app = Flask(__name__)
-# app.config["MONGO_URI"] = "mongodb+srv://unlikely:<coolperson>@cluster0-5cxq4.mongodb.net/test?retryWrites=true&w=majority"
-# mongo = PyMongo(app)
-# database = mongo.
+
+
+client = MongoClient(
+    "mongodb+srv://unlikely:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
+
+db = client.get_database('smartOTP')
+notp_colls = db.notp
+totp_colls = db.totp
+suspicious_colls = db.suspicious
 
 
 @app.route('/')
 def index():
-    # collection = mongo.db.get_collection(name='otp')
-    # print(collection)
-    return 'hello ! Welcome to smart OTP '
+
+    return render_template('index.html')
 
 
 @app.route("/get_my_ip", methods=["GET"])
 def get_my_ip():
     try:
         real_ip = request.headers['X-Forwarded-For']
-        redirect_ip = request.remote_addr
 
         return json.dumps({'real_ip': real_ip, 'redirect_ip': request.remote_addr}), 200
     except:
@@ -34,57 +39,74 @@ def verifyOTP():
 
     otp = request.form['otp']
 
-    notp = helper.isnOTP(otp)
-    totp = helper.istOTP(otp)
+    notp = helper.isOTP(notp_colls, otp)
+    totp = helper.isOTP(totp_colls, otp)
 
     if notp:
-        return 'verified'
+        return json.dumps({"Message": "Hello Legit USER"})
 
     elif totp:
-        return 'Tracked otp'
+        try:
+            ip = request.headers['X-Forwarded-For']
 
-    return 'wrong otp'
+        except:
+            ip = request.remote_addr
+
+        helper.suspicious(suspicious_colls, ip)
+        
+        data = requests.get(
+            f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
+        data = json.loads(data.text)
+
+        data['INFO'] = "We suspect you as scammer"
+        data['Scammer Details'] = " Following Are your Potential Details"
+        return data
+
+    return json.dumps({"Message": "Wrong OTP"})
 
 
 @app.route('/sendOTP', methods=['POST'])
 def sendsms():
 
     number = request.form['number']
+    send_to_mobile = request.form['mobile']
     #  OTP GENERATION
     notp = helper.generatorOTP()
     topt = helper.generatorOTP()
 
-    helper.savetotp(topt)
+    helper.saveotp(notp_colls, totp_colls, notp, topt)
 
     message = f"Your otp is {notp} \n \n if you haven't asked for otp then send this otp to track spammer {topt}"
+    if send_to_mobile:
+        conn = http.client.HTTPSConnection("api.msg91.com")
 
-    conn = http.client.HTTPSConnection("api.msg91.com")
+        payload = json.dumps({
+            'sender': 'SmtOTP',
+            'route': '4',
+            'country': '91',
+            'sms': [
+                {
+                    'message': message,
+                    'to': [
+                        number
+                    ]
+                }
+            ]
+        })
 
-    payload = json.dumps({
-        'sender': 'SmtOTP',
-        'route': '4',
-        'country': '91',
-        'sms': [
-            {
-                'message': message,
-                'to': [
-                    number
-                ]
-            }
-        ]
-    })
+        headers = {
+            'authkey': "286418A1HQ6wYO6q5e609da2P1",
+            'content-type': "application/json"
+        }
 
-    headers = {
-        'authkey': "286418A1HQ6wYO6q5e609da2P1",
-        'content-type': "application/json"
-    }
+        conn.request("POST", "/api/v2/sendsms", payload, headers)
 
-    conn.request("POST", "/api/v2/sendsms", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
 
-    res = conn.getresponse()
-    data = res.read()
-
-    return data.decode("utf-8")
+        return data.decode("utf-8")
+    else:
+        return json.dumps({"Message": message})
 
 
 if __name__ == "__main__":

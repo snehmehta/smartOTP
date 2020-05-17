@@ -1,8 +1,11 @@
 from random import randint
+from datetime import datetime
 
 
-def savetotp(topt):
-    print('Tracker otp is saved')
+def saveotp(n_colls, t_colls, notp, totp):
+    n_colls.insert_one({'otp': notp})
+    t_colls.insert_one({'otp': totp})
+    print('otps is saved')
 
 
 def generatorOTP():
@@ -14,10 +17,12 @@ def generatorOTP():
     return otp
 
 
-
-def isnOTP(otp):
-    return True
-
-
-def istOTP(otp):
+def isOTP(collection_ins, otp):
+    records = collection_ins.find_one({'otp': otp})
+    if records:
+        return True
     return False
+
+
+def suspicious(collection_ins, ip):
+    collection_ins.insert_one({'ip': ip, 'tracked_at': datetime.now()})

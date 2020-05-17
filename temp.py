@@ -1,38 +1,20 @@
-# from random import randint
+from pymongo import MongoClient
 
+client = MongoClient(
+    "mongodb+srv://unlikely:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
 
-# def generatorOTP():
-#     otp = ''
-#     for i in range(6):
-#         i = randint(0, 9)
-#         otp += str(i)
+db = client.get_database('smartOTP')
 
-#     return otp
-# # print(generator())
+normal_otp = db.notp
 
-# def savetotp(topt):
-#     print('Tracker otp is saved')
+# print(normal_otp.count_documents({}))
 
+# normal_otp.insert_one({
+#     'otp': '480231'
+# })
+# print(normal_otp.count_documents({}))
+search = normal_otp.find({'otp': '480231'})
+print(list(search))
+otps = list(normal_otp.find())
 
-# def sendotp():
-
-#     notp = generatorOTP()
-
-#     topt = generatorOTP()
-
-#     savetotp(topt)
-
-#     message = f"Your otp is : {notp} \n \nif you haven't asked for otp then send this otp to track spammer : {topt}"
-
-#     print(message)
-
-# sendotp()
-import pyotp 
-
-totp = pyotp.TOTP('base32secret3232')
-
-print(totp.now())
-
-totp.verify("171048")
-
-
+print(otps)
