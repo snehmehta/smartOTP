@@ -53,7 +53,7 @@ def verifyOTP():
             ip = request.remote_addr
 
         helper.suspicious(suspicious_colls, ip)
-        
+
         data = requests.get(
             f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
         data = json.loads(data.text)
@@ -67,9 +67,14 @@ def verifyOTP():
 
 @app.route('/sendOTP', methods=['POST'])
 def sendsms():
-
+    # print(request.form)
     number = request.form['number']
-    send_to_mobile = request.form['mobile']
+    try:
+        send_to_mobile = request.form['mobile']
+
+    except:
+        send_to_mobile = False
+
     #  OTP GENERATION
     notp = helper.generatorOTP()
     topt = helper.generatorOTP()
