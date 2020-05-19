@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block link %}
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+{% endblock %}
+
+{% block container %}
+
+<div class="alert alert-danger" role="alert">
+    <div>
+        <h1>Your Activity is Suspicious</h1>
+        <p>Your ip will be resumed after cyber anaylsis</p>
+    </div>
+</div>
+
+<div>
+    <div id="map" style="height: 500px;"></div>
+
+</div>
+
+<div>
+    <table class="table table-hover table-inverse table-responsive">
+        <thead class="thead-inverse">
+            <tr>
+                
+                {% for element in data %}
+                {% if element != 'location' %}
+
+                        <th>{{ element|e }}</th>
+                {% endif %}
+
+                {% endfor %}
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            {% for element in data %}
+                {% if element != 'location' %}
+                    <td>{{ data[element|e] }}</td>
+
+                {% endif %}
+                
+
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-hover table-inverse table-responsive">
+        <thead class="thead-inverse">
+            <tr>
+                
+            </tr>
+            </thead>
+            <tbody>
+                
+                
+                
+                
+            </tbody>
+    </table>
+    <!-- <ul class="nav justify-content-center">
+        {% for element in data %}
+            <li class="nav-item">
+                <a class="nav-link active" href="#">{{ element|e }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <ul class="nav justify-content-center">
+        {% for element in data %}
+            <li class="nav-item">
+                <a class="nav-link active" href="#">{{ data[element|e] }}</a>
+            </li>
+        {% endfor %}
+    </ul> -->
+
+</div>
+
+{% endblock %}
+{% block script %}
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+{% if data['latitude'] and data['longitude']%}
+
+<script type="text/javascript">
+
+    var latitude = {{ data['latitude'] }}
+    var longitude = {{ data['longitude'] }}
+
+    var map = L.map('map').setView([latitude, longitude], 7);
+
+    var layer = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    });
+
+    L.marker([latitude, longitude]).addTo(map)
+        .bindPopup("<strong>Your Probably location</strong>").openPopup();
+
+    // Now add the layer onto the map
+    map.addLayer(layer);
+</script>
+{% endif %}
+
+{% endblock %}

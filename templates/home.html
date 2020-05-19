@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block container %}
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url_for('home')}}">Smart OTP</a>
+        </div>
+    </div>
+</div>
+
+<div class="jumbotron">
+    <div style="margin-bottom: 20px;">
+        <h1>hello ! Welcome to smart OTP</h1>
+    </div>
+    <form action="{{ url_for('sendsms') }}" method="POST" style="margin-bottom: 20px;">
+
+        <input type="text" name="number" id="number">
+        <input type="submit" value="Generate OTP">
+
+        <div style="display: inline;">
+            <input type="checkbox" name="mobile" id="mobile" style="display: inline;" checked>
+            <p style="display: inline;">Send otp to number</p>
+        </div>
+    </form>
+
+    <form action="{{ url_for('verifyOTP') }}" method="post">
+
+        <input type="text" name="otp" id="otp">
+        <input type="submit" value="Verify OTP">
+
+    </form>
+</div>
+
+{% endblock %}

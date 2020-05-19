@@ -1,24 +1,48 @@
 {% extends 'base.html' %}
 {% block container %}
 
-<div class="jumbotron">
-    <div style="margin-bottom: 20px;">
-        <h1>hello ! Welcome to smart OTP</h1>
-    </div>
-    <form action="{{ url_for('sendsms') }}" method="POST" style="margin-bottom: 20px;">
-        <input type="text" name="number" id="number">
-        <input type="submit" value="Generate OTP">
-        <div style="display: inline;">
-            <input type="checkbox" name="mobile" id="mobile" style="display: inline;">
-            <p style="display: inline;">Send otp to number</p>
+
+<div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active">
+                    <img class="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg"
+                        alt="First slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <div class="banner-text">
+                            <h2>This is Heaven</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                nostrud exercitation</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </form>
-    <form action="{{ url_for('verifyOTP') }}" method="post">
+        <div class="col-md-4 ">
+            <h2 class="text-center">Login Now</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="text-uppercase">Username</label>
+                    <input type="text" class="form-control" placeholder="">
 
-        <input type="text" name="otp" id="otp">
-        <input type="submit" value="Verify OTP">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1" class="text-uppercase">Password</label>
+                    <input type="password" class="form-control" placeholder="">
+                </div>
 
-    </form>
-</div>
 
-{% endblock %}
+                <div class="form-check">
+
+                    <button type="submit" class="btn btn-login float-right">Submit</button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+        {% endblock %}

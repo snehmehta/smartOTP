@@ -26,3 +26,14 @@ def isOTP(collection_ins, otp):
 
 def suspicious(collection_ins, ip):
     collection_ins.insert_one({'ip': ip, 'tracked_at': datetime.now()})
+
+def is_suspicious(collection_ins, ip):
+
+    records = collection_ins.find_one({'ip' : ip})
+
+    if records and len(list(records)) > 0:
+
+        return True
+    
+    return False
+        

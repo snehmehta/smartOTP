@@ -20,8 +20,23 @@ suspicious_colls = db.suspicious
 
 @app.route('/')
 def index():
+    ip = request.remote_addr
+    is_suspicious = helper.is_suspicious(suspicious_colls, ip)
+
+    if is_suspicious:
+        data = requests.get(
+            f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
+        
+        return render_template('suspicious.html', data=data.json())
 
     return render_template('index.html')
+
+@app.route('/home')
+def home():
+
+    return render_template('home.html')
+
+
 
 
 @app.route("/get_my_ip", methods=["GET"])
@@ -60,7 +75,7 @@ def verifyOTP():
 
         data['INFO'] = "We suspect you as scammer"
         data['Scammer Details'] = " Following Are your Potential Details"
-        return data
+        return render_template('suspicious.html', data = data)
 
     return json.dumps({"Message": "Wrong OTP"})
 
