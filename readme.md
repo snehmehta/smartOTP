@@ -6,4 +6,8 @@
 
 Consider a normal scamming scenerio 
 
-![IMAGE](https://imgur.com/a/gvToljN)
+![Normal OTP](/markdown_meta/notp.png)
+
+Consider a smart OTP scamming scenerio
+
+![Smart OTP](/markdown_meta/smotp.png)
