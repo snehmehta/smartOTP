@@ -24,8 +24,10 @@ def index():
     is_suspicious = helper.is_suspicious(suspicious_colls, ip)
 
     if is_suspicious:
+        # data = requests.get(
+        #     f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
         data = requests.get(
-            f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
+            f"http://api.ipstack.com/123.201.227.38?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
         
         return render_template('suspicious.html', data=data.json())
 
