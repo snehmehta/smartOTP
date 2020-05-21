@@ -7,13 +7,15 @@ import json
 import helper
 import os 
 
-app = Flask(__name__)
-app.secret_key = 'hehehaha'
-
 db_user = os.environ.get('db_user')
 db_password = os.environ.get('db_pass')
 msg91_authkey = os.environ.get('msg91_authkey')
 ip_stack = os.environ.get('ip_stack')
+secret_key = os.environ.get('secret_key')
+
+app = Flask(__name__)
+app.secret_key = secret_key
+
 
 client = MongoClient(f"mongodb+srv://{db_user}:{db_password}@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
 

@@ -7,6 +7,10 @@
 
 ### Consider a normal scamming scenerio 
 
+![Intial Scenerio](/markdown_meta/initail.png)
+
+### Lets Break down what's their thinking Again !
+
 ![Normal OTP](/markdown_meta/notp.png)
 > Two Things to Look out:
 
@@ -28,6 +32,17 @@ Giving tracker OTP to scammer
 
 ![scammer side](/markdown_meta/scammer.png)
 
-### ....
+### Lets Break down what's their thinking Again !
 
 ![Smart OTP](/markdown_meta/smotp.png)
+
+
+### I know docs need work but use this below webapp for demo 
+
+> [Click ME (visit webapp)](https://smotp.herokuapp.com/)
+
+
+
+# Credits
+
+[Illustrations from undraw](https://undraw.co/search)
