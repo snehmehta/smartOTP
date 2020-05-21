@@ -13,8 +13,9 @@ app.secret_key = 'hehehaha'
 db_user = os.environ.get('db_user')
 db_password = os.environ.get('db_pass')
 msg91_authkey = os.environ.get('msg91_authkey')
+ip_stack = os.environ.get('ip_stack')
 
-client = MongoClient(f"mongodb+srv://unlikely:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
+client = MongoClient(f"mongodb+srv://{db_user}:{db_password}@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
 
 db = client.get_database('smartOTP')
 notp_colls = db.notp
@@ -29,10 +30,8 @@ def index():
 
     if is_suspicious:
         data = requests.get(
-            f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
-    #     data = requests.get(
-    #         f"http://api.ipstack.com/123.201.227.38?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
-        
+            f"http://api.ipstack.com/{ip}?access_key={ip_stack}&format=1")
+
         return render_template('suspicious.html', data = data)
 
     return render_template('index.html')
@@ -124,7 +123,7 @@ def sendsms():
         })
 
         headers = {
-            'authkey': "286418A1HQ6wYO6q5e609da2P1",
+            'authkey': msg91_authkey,
             'content-type': "application/json"
         }
 
