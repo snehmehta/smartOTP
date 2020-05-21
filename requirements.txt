@@ -7,3 +7,4 @@ Werkzeug==1.0.0
 pymongo==3.10.1
 requests==2.22.0
 dnspython==1.16.0
+Faker==4.1.0

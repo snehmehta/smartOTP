@@ -2,7 +2,7 @@
 {% block container %}
 
 
-<div>
+<div class="main-container">
     <div class="row">
         <div class="col-md-8">
             <div class="carousel-inner" role="listbox">
@@ -11,10 +11,8 @@
                         alt="First slide">
                     <div class="carousel-caption d-none d-md-block">
                         <div class="banner-text">
-                            <h2>This is Heaven</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                nostrud exercitation</p>
+                            <h2>Heaven Bank</h2>
+                            <p>Most Secured bank Ever. You can trust us will all your belongings.</p>
                         </div>
                     </div>
                 </div>
@@ -22,27 +20,63 @@
             </div>
         </div>
         <div class="col-md-4 ">
-            <h2 class="text-center">Login Now</h2>
-            <form class="login-form">
-                <div class="form-group">
-                    <label for="exampleInputEmail1" class="text-uppercase">Username</label>
-                    <input type="text" class="form-control" placeholder="">
+            <h2 class="text-center">Heaven Bank</h2>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-primary" role="alert">
+              <h4 class="alert-heading">Important</h4>
+              <p></p>
+              <p class="mb-0">{{ messages }}</p>
+            </div>
+            {% endif %}
+            {% endwith %}
 
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1" class="text-uppercase">Password</label>
-                    <input type="password" class="form-control" placeholder="">
-                </div>
+
+            <section>
+                <form action="{{ url_for('sendsms') }}" method="POST" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label for="number">Enter Number</label>
+                        <input type="text" class="form-control" name="number" id="number" aria-describedby="helpId"
+                            placeholder="Mobile Number">
+
+                    </div>
+                    <button type="submit" class="btn btn-info">Generate OTP</button>
 
 
-                <div class="form-check">
+                    <div class="form-check" style="display: inline;">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" name="mobile" id="mobile"
+                                value="checkedValue" checked>
+                            Send OTP to Mobile Number
+                        </label>
+                    </div>
 
-                    <button type="submit" class="btn btn-login float-right">Submit</button>
-                </div>
+                    <!-- <div style="display: inline;">
+                        <input type="checkbox" name="mobile" id="mobile" style="display: inline;" checked>
+                        <p style="display: inline;">Send otp to number</p>
+                    </div> -->
+                </form>
+            </section>
+            <section>
 
-            </form>
+
+                <form action="{{ url_for('verifyOTP') }}" method="post">
+                    <div class="form-group">
+                        <label for="otp">Verifying OTP</label>
+                        <input type="text" class="form-control" name="otp" id="otp" aria-describedby="helpId"
+                            placeholder="Enter OTP">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+
+
+                </form>
+            </section>
+
+
 
         </div>
+    </div>
+</div>
 
-
-        {% endblock %}
+{% endblock %}

@@ -1,16 +1,19 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, flash, redirect, url_for
 from pymongo import MongoClient
 
 import requests
 import http.client
 import json
 import helper
+import os 
 
 app = Flask(__name__)
 
+db_user = os.environ.get('db_user')
+db_password = os.environ.get('db_pass')
+msg91_authkey = os.environ.get('msg91_authkey')
 
-client = MongoClient(
-    "mongodb+srv://unlikely:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
+client = MongoClient(f"mongodb+srv://unlikey:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
 
 db = client.get_database('smartOTP')
 notp_colls = db.notp
@@ -24,12 +27,12 @@ def index():
     is_suspicious = helper.is_suspicious(suspicious_colls, ip)
 
     if is_suspicious:
-        # data = requests.get(
-        #     f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
         data = requests.get(
-            f"http://api.ipstack.com/123.201.227.38?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
+            f"http://api.ipstack.com/{ip}?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
+    #     data = requests.get(
+    #         f"http://api.ipstack.com/123.201.227.38?access_key=7897b68ab057b85542c588eec25a6a24&format=1")
         
-        return render_template('suspicious.html', data=data.json())
+        return render_template('suspicious.html', data = data)
 
     return render_template('index.html')
 
@@ -55,12 +58,14 @@ def get_my_ip():
 def verifyOTP():
 
     otp = request.form['otp']
-
+    otp = otp.strip()
     notp = helper.isOTP(notp_colls, otp)
     totp = helper.isOTP(totp_colls, otp)
 
+    data = helper.fake_data_generator()
+    
     if notp:
-        return json.dumps({"Message": "Hello Legit USER"})
+        return render_template('bankPage.html', data=data)
 
     elif totp:
         try:
@@ -84,7 +89,7 @@ def verifyOTP():
 
 @app.route('/sendOTP', methods=['POST'])
 def sendsms():
-    # print(request.form)
+    
     number = request.form['number']
     try:
         send_to_mobile = request.form['mobile']
@@ -99,6 +104,7 @@ def sendsms():
     helper.saveotp(notp_colls, totp_colls, notp, topt)
 
     message = f"Your otp is {notp} \n \n if you haven't asked for otp then send this otp to track spammer {topt}"
+    flash(f"Your OTP is {notp} if you haven't asked for otp then send this otp to track spammer {topt}")
     if send_to_mobile:
         conn = http.client.HTTPSConnection("api.msg91.com")
 
@@ -123,13 +129,12 @@ def sendsms():
 
         conn.request("POST", "/api/v2/sendsms", payload, headers)
 
-        res = conn.getresponse()
-        data = res.read()
 
-        return data.decode("utf-8")
+        return redirect(url_for('index'))
     else:
-        return json.dumps({"Message": message})
+        return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
+    app.secret_key = 'hehehaha'
     app.run(debug=True)
