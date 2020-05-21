@@ -13,7 +13,7 @@ db_user = os.environ.get('db_user')
 db_password = os.environ.get('db_pass')
 msg91_authkey = os.environ.get('msg91_authkey')
 
-client = MongoClient(f"mongodb+srv://unlikey:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
+client = MongoClient(f"mongodb+srv://unlikely:coolperson@cluster0-jvfen.mongodb.net/test?retryWrites=true&w=majority")
 
 db = client.get_database('smartOTP')
 notp_colls = db.notp
