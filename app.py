@@ -8,6 +8,7 @@ import helper
 import os 
 
 app = Flask(__name__)
+app.secret_key = 'hehehaha'
 
 db_user = os.environ.get('db_user')
 db_password = os.environ.get('db_pass')
@@ -136,5 +137,5 @@ def sendsms():
 
 
 if __name__ == "__main__":
-    app.secret_key = 'hehehaha'
+    
     app.run(debug=True)
